@@ -1,0 +1,23 @@
+spring:
+  application:
+    # 项目名
+    name: libraryManagementSystem
+  # 数据源信息配置
+  datasource:
+    # 数据库地址
+    url: jdbc:mysql://localhost:3306/library_management_system?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    # 数据库用户名
+    username: root
+    # 数据库密码
+    password: root
+    # 数据库驱动
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis:
+  # 告诉系统去哪里找mapper.xml文件（映射文件）
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    # 开启下划线命名风格（如user_name)和驼峰命名风格（userName）的自动转换
+    map-underscore-to-camel-case: true
+  # 设置包别名（在Mapper映射文件中直接使用实体类名）
+  type-aliases-package: com.example.librarymanagementsystem.entity

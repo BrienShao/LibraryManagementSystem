@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.librarymanagementsystem.mapper.BorrowMapper">
+    <select id="getBorrowByBookId" resultType="Borrow">
+        select * from borrow
+        <where>
+            <if test="state!=null">
+                state = #{state}
+            </if>
+            and user_id = #{userId} and book_id = #{bookId}
+        </where>
+    </select>
+
+    <select id="getUserAllBorrow" resultType="Borrow">
+        select borrow.*, book.id, book.name, book.author, book.image from borrow inner join book ON borrow.book_id = book.id
+        <where>
+            <if test="state!=null">
+                borrow.state = #{state}
+            </if>
+            and borrow.user_id = #{userId}
+        </where>
+    </select>
+
+    <select id="getAllBorrowByBookId" resultType="Borrow">
+        select * from borrow
+        <where>
+            <if test="state!=null">
+                state = #{state}
+            </if>
+            and book_id = #{id}
+        </where>
+    </select>
+</mapper>
