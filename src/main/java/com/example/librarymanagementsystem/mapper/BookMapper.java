@@ -19,7 +19,7 @@ public interface BookMapper {
     Book findById(Long bookId);
 
 
-    List<? extends Book> list(Integer categoryId, String search);
+    List<? extends Book> list(Integer categoryId, String searchKeyword);
 
     @Update("update book set name = #{name}, author = #{author}, isbn = #{isbn}, " +
             "description = #{description}, page_count = #{pageCount}, image = #{image}, name = #{name}, " +

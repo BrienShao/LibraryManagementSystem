@@ -14,13 +14,13 @@ public interface BorrowService {
     String borrow(Long bookId);
 
     // 获取用户所有借阅记录
-    PageBean<Borrow> getUserAllBorrow(Integer pageNo, Integer pageSize, Enum<BorrowState> state);
+    PageBean<Borrow> records(Integer pageNo, Integer pageSize, Enum<BorrowState> state, String searchKeyword);
 
     // 获取某图书的所有借阅记录
     List<Borrow> getAllBorrowByBookId(Long bookId, Enum<BorrowState> state);
 
     // 归还图书
-    String repaid(Long id);
+    String repaid(Long bookId, BorrowState state);
 
     // 删除记录
     void delete(Long id);

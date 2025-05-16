@@ -12,7 +12,7 @@ import java.util.UUID;
 @RestController
 public class FileUploadController {
 
-    @PostMapping("/upload")
+    @PostMapping("/api/upload")
     public String fileUpload(MultipartFile file) throws IOException {
         // 把文件存储到本地磁盘上
         String originalFilename = file.getOriginalFilename();

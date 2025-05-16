@@ -1,5 +1,6 @@
 package com.example.librarymanagementsystem.service.impl;
 
+import com.example.librarymanagementsystem.entity.AuthResponse;
 import com.example.librarymanagementsystem.entity.User;
 import com.example.librarymanagementsystem.exception.BusinessException;
 import com.example.librarymanagementsystem.mapper.UserMapper;
@@ -8,6 +9,7 @@ import com.example.librarymanagementsystem.utils.Argon2Util;
 import com.example.librarymanagementsystem.utils.JwtUtil;
 import com.example.librarymanagementsystem.utils.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -15,12 +17,15 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     @Override
     public Long getUserId() {
@@ -44,7 +49,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User createUser(String username, String password) {
+    public void createUser(String username, String password) {
         // 检查用户名是否存在
         User user = this.findByUserName(username);
         if (user == null) {
@@ -54,11 +59,10 @@ public class UserServiceImpl implements UserService {
         } else {
             throw new BusinessException("用户名已存在");
         }
-        return null;
     }
 
     @Override
-    public String login(String username, String password) {
+    public AuthResponse login(String username, String password) {
         // 根据用户名查询用户
         User user = this.findByUserName(username);
 
@@ -70,12 +74,15 @@ public class UserServiceImpl implements UserService {
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", user.getId());
         claims.put("username", user.getUsername());
-        return JwtUtil.generateToken(claims);
+        String token = JwtUtil.generateToken(claims);
+        // 把 token 存储到 Redis 中
+        stringRedisTemplate.opsForValue().set(token, token, 24, TimeUnit.HOURS);
+        return new AuthResponse(token, user);
     }
 
     @Override
     public User userInfo() {
-        return findById(getUserId());
+        return this.findById(this.getUserId());
     }
 
     @Override
@@ -97,22 +104,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updatePassword(Map<String, String> params) {
         // 校验密码
-        String oldPassword = params.get("old_password");
-        String newPassword = params.get("new_password");
-        String rePassword = params.get("re_password");
+        String oldPassword = params.get("oldPassword");
+        String newPassword = params.get("newPassword");
+        String confirmPassword = params.get("confirmPassword");
 
         // 非空校验
-        if (!StringUtils.hasLength(oldPassword) || !StringUtils.hasLength(newPassword) || !StringUtils.hasLength(rePassword)) {
+        if (!StringUtils.hasLength(oldPassword) || !StringUtils.hasLength(newPassword) || !StringUtils.hasLength(confirmPassword)) {
             throw new BusinessException("密码不能为空");
         }
 
         // 确认密码一致性
-        if (!newPassword.equals(rePassword)) {
+        if (!newPassword.equals(confirmPassword)) {
             throw new BusinessException("密码填写不一致");
         }
 
         // 当前登录用户
-        User loginUser = userInfo();
+        User loginUser = this.userInfo();
         // 新密码不能与旧密码相同
         if (Argon2Util.matchesPassword(newPassword, loginUser.getPassword())) {
             throw new BusinessException("新密码与旧密码相同");

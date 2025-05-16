@@ -13,7 +13,7 @@ public interface BookService {
     Book findById(Long bookId);
 
     // 条件分页列表查询
-    PageBean<Book> list(Integer pageNo, Integer pageSize, Integer categoryId, String search);
+    PageBean<Book> list(Integer pageNo, Integer pageSize, Integer categoryId, String searchKeyword);
 
     void updateBook(Book book);
 

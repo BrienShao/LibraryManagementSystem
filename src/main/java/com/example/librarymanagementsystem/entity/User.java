@@ -1,5 +1,6 @@
 package com.example.librarymanagementsystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -8,6 +9,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 public class User {
@@ -27,8 +29,11 @@ public class User {
     @Email  //验证邮箱格式
     private String email;   // 邮箱
     private String avatar;  // 头像
-    private LocalDateTime birthday;  // 生日
+    @JsonFormat(pattern="yyyy-MM-dd")
+    private Date birthday;  // 生日
     private Integer isAdmin;    // 是否为管理员（ 1 管理员 0 普通用户）
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;    // 创建时间
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateTime;    // 更新时间
 }

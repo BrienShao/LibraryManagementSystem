@@ -8,8 +8,8 @@
             <if test="categoryId!=null">
                 category_id = #{categoryId}
             </if>
-            <if test="search!=null">
-                and name like concat('%', concat(#{search}), '%')
+            <if test="searchKeyword!=null">
+                and name like concat('%', concat(#{searchKeyword}), '%')
             </if>
         </where>
     </select>

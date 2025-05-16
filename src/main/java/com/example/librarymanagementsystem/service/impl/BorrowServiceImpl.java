@@ -59,11 +59,11 @@ public class BorrowServiceImpl implements BorrowService {
         Long userId = userService.getUserId();
         // 查找未还借阅记录
         Borrow borrow = borrowMapper.getBorrowByBookId(userId, bookId, null);
-        if (borrow.getState() == BorrowState.UNCLAIMED || borrow.getState() == BorrowState.CLAIMED) {
+        if (borrow != null && (borrow.getState() == BorrowState.UNCLAIMED || borrow.getState() == BorrowState.CLAIMED)) {
             throw new BusinessException("存在借阅记录");
         }
         Book book = bookMapper.findById(bookId);
-        // 状态判断
+        // 图书状态判断
         switch (book.getState()) {
             case BORROWED -> throw new BusinessException("图书无库存");
             case UNDER_MAINTENANCE -> throw new BusinessException("图书维护中");
@@ -92,16 +92,17 @@ public class BorrowServiceImpl implements BorrowService {
      * @param pageNo 页数
      * @param pageSize 每页条数
      * @param state 记录状态
+     * @param searchKeyword 搜索关键词
      */
     @Override
-    public PageBean<Borrow> getUserAllBorrow(Integer pageNo, Integer pageSize, Enum<BorrowState> state) {
+    public PageBean<Borrow> records(Integer pageNo, Integer pageSize, Enum<BorrowState> state, String searchKeyword) {
         Long userId = userService.getUserId();
         // 创建PageBean对象
         PageBean<Borrow> pageBean = new PageBean<>();
         // 开启分页查询 PageHelp
         PageHelper.startPage(pageNo, pageSize);
         // 调用mapper
-        PageInfo<Borrow> pageInfo = new PageInfo<>(borrowMapper.getUserAllBorrow(userId, state));
+        PageInfo<Borrow> pageInfo = new PageInfo<>(borrowMapper.records(userId, state, searchKeyword));
         pageBean.setTotal(pageInfo.getTotal());
         pageBean.setList(pageInfo.getList());
         return pageBean;
@@ -119,16 +120,17 @@ public class BorrowServiceImpl implements BorrowService {
 
     /**
      * 归还图书
-     * @param id 借阅ID
+     * @param bookId 图书ID
+     * @param state 记录状态
      */
     @Override
-    public String repaid(Long id) {
+    public String repaid(Long bookId, BorrowState state) {
         // 获取当前用户ID
         Long userId = userService.getUserId();
-        // 获取借阅记录
-        Borrow borrow = getBorrowById(id);
         // 获取图书
-        Book book = bookMapper.findById(borrow.getBookId());
+        Book book = bookMapper.findById(bookId);
+        // 获取借阅记录
+        Borrow borrow = this.getBorrowByBookId(bookId, state);
 
         // 更新图书库存信息
         book.setStockCount(book.getStockCount() + 1);
@@ -159,7 +161,7 @@ public class BorrowServiceImpl implements BorrowService {
         // 获取当前用户ID
         Long userId = userService.getUserId();
         // 获取借阅记录
-        Borrow borrow = getBorrowById(id);
+        Borrow borrow = this.getBorrowById(id);
         // 未归还图书不允许删除记录
         if (borrow.getState() == BorrowState.UNCLAIMED || borrow.getState() == BorrowState.CLAIMED || borrow.getState() == BorrowState.UNREPAID) {
             throw new BusinessException("请先归还图书再进行操作");

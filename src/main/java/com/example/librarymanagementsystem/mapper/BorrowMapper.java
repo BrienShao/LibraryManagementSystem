@@ -13,10 +13,10 @@ public interface BorrowMapper {
     Borrow getBorrowByBookId(Long userId, Long bookId, Enum<BorrowState> state);
 
     @Insert("insert into borrow (user_id, book_id, book_name, author, image, create_time) " +
-            "VALUES (#{userId}, #{id}, #{name}, #{author}, #{image}, now())")
+            "VALUES (#{userId}, #{book.id}, #{book.name}, #{book.author}, #{book.image}, now())")
     void borrow(Long userId, Book book);
 
-    List<? extends Borrow> getUserAllBorrow(Long userId, Enum<BorrowState> state);
+    List<? extends Borrow> records(Long userId, Enum<BorrowState> state, String searchKeyword);
 
     List<Borrow> getAllBorrowByBookId(Long id, Enum<BorrowState> state);
 

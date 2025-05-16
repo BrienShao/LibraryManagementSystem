@@ -12,7 +12,14 @@ spring:
     password: root
     # 数据库驱动
     driver-class-name: com.mysql.cj.jdbc.Driver
-
+  servlet:
+    multipart:
+      # 单个文件最大上传大小
+      max-file-size: 5MB
+  data:
+    redis:
+      host: localhost
+      port: 6379
 mybatis:
   # 告诉系统去哪里找mapper.xml文件（映射文件）
   mapper-locations: classpath:mapper/*.xml

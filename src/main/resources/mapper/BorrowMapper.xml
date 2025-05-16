@@ -9,15 +9,19 @@
             </if>
             and user_id = #{userId} and book_id = #{bookId}
         </where>
+        ORDER BY id DESC LIMIT 1
     </select>
 
-    <select id="getUserAllBorrow" resultType="Borrow">
-        select borrow.*, book.id, book.name, book.author, book.image from borrow inner join book ON borrow.book_id = book.id
+    <select id="records" resultType="Borrow">
+        select * from borrow
         <where>
             <if test="state!=null">
                 borrow.state = #{state}
             </if>
-            and borrow.user_id = #{userId}
+            <if test="searchKeyword!=null">
+                and book_name like concat('%', concat(#{searchKeyword}), '%')
+            </if>
+            and user_id = #{userId}
         </where>
     </select>
 

@@ -1,5 +1,6 @@
 package com.example.librarymanagementsystem.service;
 
+import com.example.librarymanagementsystem.entity.AuthResponse;
 import com.example.librarymanagementsystem.entity.User;
 
 import java.util.List;
@@ -17,10 +18,10 @@ public interface UserService {
      User findByUserName(String username);
 
      // 注册新用户
-     User createUser(String username, String password);
+     void createUser(String username, String password);
 
      // 用户登录
-     String login(String username, String password);
+     AuthResponse login(String username, String password);
 
      // 当前用户信息
      User userInfo();

@@ -3,7 +3,6 @@ package com.example.librarymanagementsystem.service.impl;
 import com.example.librarymanagementsystem.entity.*;
 import com.example.librarymanagementsystem.exception.BusinessException;
 import com.example.librarymanagementsystem.mapper.BookMapper;
-import com.example.librarymanagementsystem.repository.BookRepository;
 import com.example.librarymanagementsystem.service.BookService;
 import com.example.librarymanagementsystem.service.BorrowService;
 import com.example.librarymanagementsystem.service.UserService;
@@ -20,22 +19,10 @@ import java.util.List;
 public class BookServiceImpl implements BookService {
     @Autowired
     private BookMapper bookMapper;
-
-    private final BookRepository bookRepository;
-
     @Autowired
     private UserService userService;
     @Autowired
     private BorrowService borrowService;
-
-    public BookServiceImpl(BookRepository bookRepository) {
-        this.bookRepository = bookRepository;
-    }
-
-    public Book getBookById(Long bookId) {
-        return bookRepository.findById(bookId)
-                .orElseThrow(() -> new BusinessException("图书ID不存在: " + bookId));
-    }
 
     @Override
     public void addBook(Book book) {
@@ -49,17 +36,21 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book findById(Long bookId) {
-        return bookMapper.findById(bookId);
+        Book book = bookMapper.findById(bookId);
+        if (book == null) {
+            throw new BusinessException("请求参数错误");
+        }
+        return book;
     }
 
     @Override
-    public PageBean<Book> list(Integer pageNo, Integer pageSize, Integer categoryId, String search) {
+    public PageBean<Book> list(Integer pageNo, Integer pageSize, Integer categoryId, String searchKeyword) {
         // 创建PageBean对象
         PageBean<Book> pageBean = new PageBean<>();
         // 开启分页查询 PageHelp
         PageHelper.startPage(pageNo, pageSize);
         // 调用mapper
-        PageInfo<Book> pageInfo = new PageInfo<>(bookMapper.list(categoryId, search));
+        PageInfo<Book> pageInfo = new PageInfo<>(bookMapper.list(categoryId, searchKeyword));
         pageBean.setTotal(pageInfo.getTotal());
         pageBean.setList(pageInfo.getList());
         return pageBean;

@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/borrow")
+@RequestMapping("/api/borrow")
 public class BorrowController {
 
     @Autowired
@@ -27,20 +27,22 @@ public class BorrowController {
      * 获取当前用户借阅列表
      * @param pageNo 页数
      * @param pageSize 每页条数
-     * @param state 记录状态
+     * @param state 记录状态（非必须）
+     * @param searchKeyword 搜索关键词（非必须）
      */
-    @GetMapping
-    public PageBean<Borrow> getUserAllBorrow(Integer pageNo, Integer pageSize, @RequestParam(required = false) Enum<BorrowState> state) {
-        return borrowService.getUserAllBorrow(pageNo, pageSize, state);
+    @GetMapping("/records")
+    public PageBean<Borrow> records(Integer pageNo, Integer pageSize, @RequestParam(required = false) BorrowState state, @RequestParam(required = false) String searchKeyword) {
+        return borrowService.records(pageNo, pageSize, state, searchKeyword);
     }
 
     /**
      * 通过图书ID获取当前用户某图书的借阅记录
      * @param bookId 图书ID
+     * @param state 记录状态（非必须）
      */
     @GetMapping("/book/{bookId}")
-    public Borrow getBorrowByBookId(@PathVariable Long bookId) {
-        return borrowService.getBorrowByBookId(bookId, null);
+    public Borrow getBorrowByBookId(@PathVariable Long bookId, @RequestParam(required = false) Enum<BorrowState> state) {
+        return borrowService.getBorrowByBookId(bookId, state);
     }
 
     /**
@@ -54,11 +56,12 @@ public class BorrowController {
 
     /**
      * 归还图书
-     * @param id 借阅ID
+     * @param bookId 图书ID
+     * @param state 借阅记录状态
      */
-    @PatchMapping("/{id}")
-    public String repaid(@PathVariable Long id) {
-        return borrowService.repaid(id);
+    @PatchMapping("/{bookId}")
+    public String repaidByBookId(@PathVariable Long bookId, @RequestParam BorrowState state) {
+        return borrowService.repaid(bookId, state);
     }
 
     /**
