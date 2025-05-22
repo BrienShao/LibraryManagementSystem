@@ -33,5 +33,5 @@ public interface UserService {
      void updateAvatar(String avatarUrl);
 
      // 修改密码
-     void updatePassword(Map<String, String> params);
+     void updatePassword(Map<String, String> passwordData);
 }

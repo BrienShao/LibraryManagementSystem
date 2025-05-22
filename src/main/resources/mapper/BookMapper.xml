@@ -8,9 +8,13 @@
             <if test="categoryId!=null">
                 category_id = #{categoryId}
             </if>
+            <if test="state!=null">
+                and state = #{state}
+            </if>
             <if test="searchKeyword!=null">
                 and name like concat('%', concat(#{searchKeyword}), '%')
             </if>
         </where>
+        ORDER BY id DESC
     </select>
 </mapper>

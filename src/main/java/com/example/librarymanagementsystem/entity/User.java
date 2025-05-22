@@ -22,10 +22,9 @@ public class User {
     private String gender;  // 性别
     private Integer amount; // 可借数量
     private String phone;   // 电话号码
-    @NotEmpty
+    @NotEmpty(message = "昵称不能为空")
     @Pattern(regexp = "^\\S{1,10}$")
     private String nickname;    // 昵称
-    @NotEmpty
     @Email  //验证邮箱格式
     private String email;   // 邮箱
     private String avatar;  // 头像

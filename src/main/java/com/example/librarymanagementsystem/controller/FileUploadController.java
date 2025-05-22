@@ -12,12 +12,12 @@ import java.util.UUID;
 @RestController
 public class FileUploadController {
 
-    @PostMapping("/api/upload")
+    @PostMapping("/upload")
     public String fileUpload(MultipartFile file) throws IOException {
         // 把文件存储到本地磁盘上
         String originalFilename = file.getOriginalFilename();
-        String fileName = UUID.randomUUID() + Objects.requireNonNull(originalFilename).substring(originalFilename.lastIndexOf("."));
         // 保证名字唯一性，防止文件覆盖
+        String fileName = UUID.randomUUID() + Objects.requireNonNull(originalFilename).substring(originalFilename.lastIndexOf("."));
         file.transferTo(new File("C:\\Users\\86422\\Desktop\\images\\" + fileName));
         return "URL访问地址";
     }

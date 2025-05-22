@@ -21,17 +21,19 @@ public interface UserMapper {
     User findByUserName(String username);
 
     // 创建新用户
-    @Insert("insert into user(username, password, nickname, create_time, update_time)" +
-            "values(#{username}, #{password}, #{username}, now(), now())")
+    @Insert("insert into user(username, password, nickname, amount, gender, birthday, create_time, update_time)" +
+            "values(#{username}, #{password}, #{username}, 5, '男', '2000-01-01', now(), now())")
     void createUser(String username, String password);
 
     // 更新用户信息
     @Update("update user set " +
             "gender = #{gender}, " +
+            "amount = #{amount}, " +
             "phone = #{phone}, " +
             "nickname = #{nickname}, " +
             "email = #{email}, " +
             "birthday = #{birthday}, " +
+            "is_admin = #{isAdmin}, " +
             "update_time = #{updateTime} where id = #{id}")
     void update(User user);
 

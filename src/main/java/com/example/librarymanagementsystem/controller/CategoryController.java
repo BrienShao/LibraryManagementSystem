@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/category")
+@RequestMapping("/category")
 public class CategoryController {
 
     @Autowired
@@ -54,8 +54,8 @@ public class CategoryController {
      * 删除分类
      * @param id 分类ID
      */
-    @DeleteMapping
-    public void delete(Long id) {
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
         categoryService.delete(id);
     }
 }

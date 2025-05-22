@@ -21,8 +21,11 @@
             <if test="searchKeyword!=null">
                 and book_name like concat('%', concat(#{searchKeyword}), '%')
             </if>
-            and user_id = #{userId}
+            <if test="userId!=null">
+                and user_id = #{userId}
+            </if>
         </where>
+        ORDER BY id DESC
     </select>
 
     <select id="getAllBorrowByBookId" resultType="Borrow">

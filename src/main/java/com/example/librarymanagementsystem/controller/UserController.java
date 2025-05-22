@@ -16,7 +16,7 @@ import java.util.Map;
 
 @Validated
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired
@@ -77,11 +77,11 @@ public class UserController {
     /**
      * 修改密码
      *
-     * @param params 修改密码信息
+     * @param passwordData 修改密码信息
      */
     @PutMapping("/password")
-    public void updatePassword(@RequestBody Map<String, String> params, @RequestHeader(value = "Authorization") String token) {
-        userService.updatePassword(params);
+    public void updatePassword(@RequestBody Map<String, String> passwordData, @RequestHeader(value = "Authorization") String token) {
+        userService.updatePassword(passwordData);
         // 删除 Redis 中对应的 token
         stringRedisTemplate.delete(token);
 

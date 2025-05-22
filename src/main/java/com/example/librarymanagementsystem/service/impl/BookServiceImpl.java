@@ -44,13 +44,13 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public PageBean<Book> list(Integer pageNo, Integer pageSize, Integer categoryId, String searchKeyword) {
+    public PageBean<Book> list(Integer pageNo, Integer pageSize, Integer categoryId, BookState state, String searchKeyword) {
         // 创建PageBean对象
         PageBean<Book> pageBean = new PageBean<>();
         // 开启分页查询 PageHelp
         PageHelper.startPage(pageNo, pageSize);
         // 调用mapper
-        PageInfo<Book> pageInfo = new PageInfo<>(bookMapper.list(categoryId, searchKeyword));
+        PageInfo<Book> pageInfo = new PageInfo<>(bookMapper.list(categoryId, state, searchKeyword));
         pageBean.setTotal(pageInfo.getTotal());
         pageBean.setList(pageInfo.getList());
         return pageBean;

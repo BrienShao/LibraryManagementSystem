@@ -12,6 +12,7 @@ public interface BorrowService {
 
     // 新增借阅记录
     String borrow(Long bookId);
+    void adminBorrow(Borrow borrow);
 
     // 获取用户所有借阅记录
     PageBean<Borrow> records(Integer pageNo, Integer pageSize, Enum<BorrowState> state, String searchKeyword);
@@ -27,4 +28,7 @@ public interface BorrowService {
 
     // 获取借阅记录信息
     Borrow getBorrowById(Long id);
+    PageBean<Borrow> allRecords(Integer pageNo, Integer pageSize, BorrowState state, Long userId, String searchKeyword);
+
+    String update(Borrow borrow);
 }

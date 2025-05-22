@@ -1,6 +1,7 @@
 package com.example.librarymanagementsystem.controller;
 
 import com.example.librarymanagementsystem.entity.Book;
+import com.example.librarymanagementsystem.entity.BookState;
 import com.example.librarymanagementsystem.entity.PageBean;
 import com.example.librarymanagementsystem.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/books")
+@RequestMapping("/books")
 public class BookController {
 
     @Autowired
@@ -28,11 +29,12 @@ public class BookController {
      * @param pageNo 页数
      * @param pageSize 没页条数
      * @param categoryId 分类ID（非必须）
+     * @param state 图书状态（非必须）
      * @param searchKeyword 搜索关键词（非必须）
      */
     @GetMapping
-    public PageBean<Book> list(Integer pageNo, Integer pageSize, @RequestParam(required = false) Integer categoryId, @RequestParam(required = false) String searchKeyword) {
-        return bookService.list(pageNo, pageSize, categoryId, searchKeyword);
+    public PageBean<Book> list(Integer pageNo, Integer pageSize, @RequestParam(required = false) Integer categoryId, @RequestParam(required = false) BookState state, @RequestParam(required = false) String searchKeyword) {
+        return bookService.list(pageNo, pageSize, categoryId, state, searchKeyword);
     }
 
     /**

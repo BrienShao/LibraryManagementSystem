@@ -102,11 +102,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updatePassword(Map<String, String> params) {
+    public void updatePassword(Map<String, String> passwordData) {
         // 校验密码
-        String oldPassword = params.get("oldPassword");
-        String newPassword = params.get("newPassword");
-        String confirmPassword = params.get("confirmPassword");
+        String oldPassword = passwordData.get("oldPassword");
+        String newPassword = passwordData.get("newPassword");
+        String confirmPassword = passwordData.get("confirmPassword");
 
         // 非空校验
         if (!StringUtils.hasLength(oldPassword) || !StringUtils.hasLength(newPassword) || !StringUtils.hasLength(confirmPassword)) {

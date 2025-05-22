@@ -1,6 +1,7 @@
 package com.example.librarymanagementsystem.service;
 
 import com.example.librarymanagementsystem.entity.Book;
+import com.example.librarymanagementsystem.entity.BookState;
 import com.example.librarymanagementsystem.entity.PageBean;
 
 
@@ -13,7 +14,7 @@ public interface BookService {
     Book findById(Long bookId);
 
     // 条件分页列表查询
-    PageBean<Book> list(Integer pageNo, Integer pageSize, Integer categoryId, String searchKeyword);
+    PageBean<Book> list(Integer pageNo, Integer pageSize, Integer categoryId, BookState state, String searchKeyword);
 
     void updateBook(Book book);
 

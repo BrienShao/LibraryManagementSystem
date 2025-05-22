@@ -12,8 +12,8 @@ public interface BorrowMapper {
 
     Borrow getBorrowByBookId(Long userId, Long bookId, Enum<BorrowState> state);
 
-    @Insert("insert into borrow (user_id, book_id, book_name, author, image, create_time) " +
-            "VALUES (#{userId}, #{book.id}, #{book.name}, #{book.author}, #{book.image}, now())")
+    @Insert("insert into borrow (user_id, book_id, book_name, author, image, create_time, end_time) " +
+            "VALUES (#{userId}, #{book.id}, #{book.name}, #{book.author}, #{book.image}, now(), date_add(now(), interval 7 day))")
     void borrow(Long userId, Book book);
 
     List<? extends Borrow> records(Long userId, Enum<BorrowState> state, String searchKeyword);
@@ -21,7 +21,7 @@ public interface BorrowMapper {
     List<Borrow> getAllBorrowByBookId(Long id, Enum<BorrowState> state);
 
     @Update("update borrow set state = #{state}, end_time = #{endTime} " +
-            "where user_id = #{userId} and book_id = #{bookId}")
+            "where id = #{id}")
     void repaid(Borrow borrow);
 
     @Delete("delete from borrow where user_id = #{userId} and book_id = #{bookId}")
@@ -29,4 +29,9 @@ public interface BorrowMapper {
 
     @Select("select * from borrow where id = #{id}")
     Borrow getBorrowById(Long id);
+
+    @Insert("insert into borrow (user_id, book_id, book_name, author, image, create_time, end_time, state) " +
+            "VALUES (#{borrow.userId}, #{borrow.bookId}, #{borrow.bookName}, #{borrow.author}, " +
+            "#{borrow.image}, #{borrow.createTime}, #{borrow.endTime}, #{borrow.state})")
+    void adminBorrow(Borrow borrow);
 }
